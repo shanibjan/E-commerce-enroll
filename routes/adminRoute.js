@@ -8,37 +8,34 @@ const router = express.Router();
 
 // Generate JWT Token
 const generateToken = (res, adminId) => {
-  const token = jwt.sign({ id: adminId }, process.env.JWT_SECRET, { expiresIn: "7d" });
-
-  res.cookie("jwt", token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-  });
-};
+    const token = jwt.sign({ id: adminId }, process.env.JWT_SECRET, { expiresIn: "7d" });
+  
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production" ? true : false, // ✅ Secure only in production
+      sameSite: "lax", // ✅ Allows cross-origin authentication
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+  };
+  
+  
 
 // Admin Login
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  const admin = await Admin.findOne({ email });
-  const testHash = await bcrypt.hash("admin123", 10);
-  console.log("Manually Hashed:", testHash);
+    const { email, password } = req.body;
+    const admin = await Admin.findOne({ email });
   
-//   console.log(password);
-//   console.log(admin.password);
+    if (admin && (await bcrypt.compare(password, admin.password.toString()))) {
+      generateToken(res, admin._id);
   
-  const isMatch = await bcrypt.compare(password,testHash);
-console.log("Password Match:", isMatch);
-
-  if (admin && (await bcrypt.compare(password, admin.password.toString()))) {
-    generateToken(res, admin._id);
-    res.json({ id: admin._id, email: admin.email, role: admin.role });
-  } else {
-    res.status(401).json({ message: "Invalid credentials" });
-  }
-});
+      console.log("Cookie Set:", res.getHeaders()['set-cookie']); // ✅ Debugging line
+  
+      res.json({ id: admin._id, email: admin.email, role: admin.role ,token:res.getHeaders()['set-cookie'] });
+    } else {
+      res.status(401).json({ message: "Invalid credentials" });
+    }
+  });
+  
 
 // Logout
 router.post("/logout", (req, res) => {

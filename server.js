@@ -16,29 +16,24 @@ connectDB();
 // CORS configuration for requests with credentials
 app.use(
   cors({
-    origin: "http://localhost:3000", // Specify frontend URL
-    credentials: true, // Allow credentials (cookies)
+    origin: "http://localhost:3000", // ✅ Ensure this matches frontend URL
+    credentials: true, // ✅ Allows cookies
     methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", "Set-Cookie"], // ✅ Include Set-Cookie
   })
 );
+
 
 app.use(express.json());
 app.use(cookieParser());
 
-// Admin routes
+// ✅ Define API routes first
 app.use('/api/admin', adminRoute);
 app.use("/api/products", productRoute);
 
-// Serve static files (React build folder)
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
+// ✅ Serve static frontend **after API routes**
 
-// Serve the index.html file for any unknown paths
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
-});
+
 
 const PORT = process.env.PORT || 7000;
 

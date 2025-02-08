@@ -11,14 +11,23 @@ export const adminLogin = createAsyncThunk(
         { email, password },
         { withCredentials: true }
       );
-      return data; // Return the token or admin data
+      return data; // ✅ Token is now returned in response
     } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "Login failed"
-      );
+      return rejectWithValue(error.response?.data?.message || "Login failed");
     }
   }
 );
+
+// Async thunk for admin logout
+export const adminLogout = createAsyncThunk("admin/logout", async (_, { dispatch }) => {
+  try {
+    await axios.post("http://localhost:7000/api/admin/logout", {}, { withCredentials: true });
+    localStorage.removeItem("adminToken"); // ✅ Clear localStorage
+    dispatch(logout()); // ✅ Clear Redux state
+  } catch (error) {
+    console.error("Logout failed:", error);
+  }
+});
 
 const adminAuthSlice = createSlice({
   name: "adminAuth",
@@ -31,7 +40,6 @@ const adminAuthSlice = createSlice({
     logout: (state) => {
       state.admin = null;
       state.error = null;
-      localStorage.removeItem("adminToken"); // Clear the token from localStorage
     },
   },
   extraReducers: (builder) => {
@@ -42,13 +50,17 @@ const adminAuthSlice = createSlice({
       })
       .addCase(adminLogin.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.admin = action.payload;
+        state.admin = action.payload.admin;
         state.error = null;
-        localStorage.setItem("adminToken", action.payload.token); // Store the token
+        localStorage.setItem("adminToken", action.payload.token); // ✅ Store token safely
       })
       .addCase(adminLogin.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
+      })
+      .addCase(adminLogout.fulfilled, (state) => {
+        state.admin = null;
+        state.error = null;
       });
   },
 });
