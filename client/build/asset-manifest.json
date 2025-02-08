@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/static/css/main.117a4646.css",
+    "main.js": "/static/js/main.55316844.js",
+    "static/js/453.419a5d54.chunk.js": "/static/js/453.419a5d54.chunk.js",
+    "static/media/bg.png": "/static/media/bg.0db7a7f59566ea44c8e1.png",
+    "static/media/Gordita Bold.woff": "/static/media/Gordita Bold.162fc0c81c4880cb73f9.woff",
+    "static/media/Gordita Medium.woff": "/static/media/Gordita Medium.8667baffc43f0db04fc3.woff",
+    "static/media/Gordita Regular.woff": "/static/media/Gordita Regular.74727069bd5cbb1643f8.woff",
+    "static/media/drinkbottom.png": "/static/media/drinkbottom.2d4624624d1d7e01d714.png",
+    "static/media/Frame.png": "/static/media/Frame.9167315807cd4f077e30.png",
+    "static/media/drinktop.png": "/static/media/drinktop.8807faffee9c31092da2.png",
+    "static/media/rect.png": "/static/media/rect.f7c9db8a395f38e1afe3.png",
+    "index.html": "/index.html",
+    "main.117a4646.css.map": "/static/css/main.117a4646.css.map",
+    "main.55316844.js.map": "/static/js/main.55316844.js.map",
+    "453.419a5d54.chunk.js.map": "/static/js/453.419a5d54.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.117a4646.css",
+    "static/js/main.55316844.js"
+  ]
+}
