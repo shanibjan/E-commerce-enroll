@@ -12,8 +12,8 @@ const generateToken = (res, adminId) => {
   
     res.cookie("jwt", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production" ? true : false, // ✅ Secure only in production
-      sameSite: "lax", // ✅ Allows cross-origin authentication
+      secure: process.env.NODE_ENV === "production" ? true : false, //  Secure only in production
+      sameSite: "lax", //  Allows cross-origin authentication
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
   };
@@ -28,7 +28,7 @@ router.post("/login", async (req, res) => {
     if (admin && (await bcrypt.compare(password, admin.password.toString()))) {
       generateToken(res, admin._id);
   
-      console.log("Cookie Set:", res.getHeaders()['set-cookie']); // ✅ Debugging line
+      console.log("Cookie Set:", res.getHeaders()['set-cookie']); //  Debugging line
   
       res.json({ id: admin._id, email: admin.email, role: admin.role ,token:res.getHeaders()['set-cookie'] });
     } else {

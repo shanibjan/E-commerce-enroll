@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addProduct } from '../redux/slices/productSlice'; // Import your addProduct action
-
+import imageCompression from "browser-image-compression";
 const AddProducts = () => {
   const [productData, setProductData] = useState({
     name: '',
@@ -14,16 +14,37 @@ const AddProducts = () => {
   const dispatch = useDispatch();
   const { isLoading, error } = useSelector((state) => state.product); // Access loading and error state
 
-  // Handle file selection
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setProductData((prevState) => ({
-        ...prevState,
-        imageUrl: URL.createObjectURL(file),
-      }));
+  const handleImageUpload = async (e) => {
+    let val = e.target.files[0];
+
+    const options = {
+      maxSizeMB: 1, // Maximum file size (in MB)
+      maxWidthOrHeight: 800, // Max width or height in pixels
+      useWebWorker: true, // Use web workers for performance
+    };
+
+    try {
+      // Compress the image
+      const compressedFile = await imageCompression(val, options);
+
+      const reader = new FileReader();
+      reader.readAsDataURL(compressedFile); // Convert the compressed image to base64
+
+      reader.addEventListener("load", () => {
+        let imageLoader = reader.result;
+
+        // Set the compressed image as base64
+        setProductData((prevState) => ({
+          ...prevState,
+          imageUrl: imageLoader,
+        }));
+      });
+    } catch (error) {
+      console.log("Error during image compression:", error);
     }
   };
+  //
+ 
 
   // Handle form field changes
   const handleChange = (e) => {

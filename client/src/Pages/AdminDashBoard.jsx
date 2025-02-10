@@ -12,7 +12,7 @@ const AdminDashBoard = () => {
   const nav = useNavigate();
   const dispatch = useDispatch();
   
-  const { admin, isLoading } = useSelector((state) => state.adminAuth); // Get admin from Redux store
+  const { isLoading } = useSelector((state) => state.adminAuth); // Get admin from Redux store
   const [component, setComponent] = useState("Products");
   const [error, setError] = useState(""); // Manage error state for logout
 
@@ -22,13 +22,15 @@ const AdminDashBoard = () => {
         const { data } = await axios.get("http://localhost:7000/api/admin/profile", { withCredentials: true });
         console.log("Admin Data:", data);
       } catch (error) {
+        console.log(error);
+        
         nav("/admin-login"); // Redirect if authentication fails
       }
     };
     fetchAdmin();
   }, [nav]);
 
-  // ✅ Logout Handler
+  //  Logout Handler
   const logOut = async () => {
     try {
       await dispatch(adminLogout()).unwrap(); // Dispatch Redux logout action
@@ -38,7 +40,7 @@ const AdminDashBoard = () => {
     }
   };
 
-  // ✅ Show loading message while authentication check is in progress
+  //  Show loading message while authentication check is in progress
   if (isLoading) return <p>Loading...</p>;
 
   

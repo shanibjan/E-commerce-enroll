@@ -39,7 +39,7 @@ router.get("/get-products", async (req, res) => {
 });
 
 router.put("/update-product/:id", async (req, res) => {
-    const { name, description, price ,stock} = req.body;
+    const { name, description, price ,stock,imageUrl} = req.body;
    
     
     try {
@@ -50,6 +50,7 @@ router.put("/update-product/:id", async (req, res) => {
       product.description = description || product.description;
       product.price = price || product.price;
       product.stock = stock || product.stock;
+      product.imageUrl=imageUrl|| product.imageUrl
   
       await product.save();
       res.status(200).json({ message: "Product updated successfully", product });
